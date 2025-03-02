@@ -1,0 +1,227 @@
+---
+title: "cyung25_OriginalHomeworkCode_03"
+author: "Charles Yung"
+date: "`r Sys.Date()`"
+output: html_document
+---
+```{r}
+#Load Zombies.csv dataset into R. I did this through following the module on uploading a local file
+df <-read.csv("~/Desktop/zombies.csv", sep = ",", header = TRUE, stringsAsFactors = FALSE)
+d <- read.table(f, header = TRUE, sep = ",", stringsAsFactors = FALSE)
+head(d)
+class(d)
+```
+```{r}
+#Calculate population means/SDs of height, weight, age, zombies killed, years of education. 
+zombies <- read.csv("~/Desktop/zombies.csv", header = TRUE)
+mean_height <- mean(zombies$height)
+print (mean_height)
+mean_weight <- mean(zombies$weight)
+print (mean_weight)
+mean_age <- mean(zombies$age)
+print (mean_age)
+mean_zkilled <- mean(zombies$zombies_killed)
+print(mean_zkilled)
+mean_yredu <- mean(zombies$years_of_education)
+print(mean_yredu)
+#So we have the calculated means of each column. Now for standard deviation for each column. First define population standard deviation function. 
+pop_sd <- function(x) {sqrt(pop_v(x))}
+pop_sd
+pop_v <- function(x) {sum((x - mean(x))^2)/(length(x))}
+pop_v
+#Don't forget to define the variance
+pop_sd_height <- pop_sd(zombies$height)
+print(pop_sd_height)
+pop_sd_weight <- pop_sd(zombies$weight)
+print(pop_sd_weight)
+pop_sd_age <- pop_sd(zombies$age)
+print(pop_sd_age)
+pop_sd_zkilled <- pop_sd(zombies$zombies_killed)
+print(pop_sd_zkilled)
+pop_sd_yredu <- pop_sd(zombies$years_of_education)
+print(pop_sd_yredu)
+```
+```{r}
+#Using GGplot2 to make height by gender 
+library(ggplot2)
+Height_By_Gender <- ggplot(zombies, aes(x = gender, y = height)) 
+Height_By_Gender <- Height_By_Gender + geom_boxplot()
+Height_By_Gender <- Height_By_Gender + theme(axis.text.x = element_text(angle = 90))
+Height_By_Gender <- Height_By_Gender + ylab("height")
+Height_By_Gender
+```
+
+```{r}
+#Using GGplot2 to make weight by gender 
+Weight_By_Gender <- ggplot(zombies, aes(x = gender, y = weight)) 
+Weight_By_Gender <- Weight_By_Gender + geom_boxplot()
+Weight_By_Gender <- Weight_By_Gender + theme(axis.text.x = element_text(angle = 90))
+Weight_By_Gender <- Weight_By_Gender + ylab("weight")
+Weight_By_Gender
+```
+
+```{r}
+#Using GGplot2 to make age by gender 
+Age_By_Gender <- ggplot(zombies, aes(x = gender, y = age)) 
+Age_By_Gender <- Age_By_Gender + geom_boxplot()
+Age_By_Gender <- Age_By_Gender + theme(axis.text.x = element_text(angle = 90))
+Age_By_Gender <- Age_By_Gender + ylab("age")
+Age_By_Gender
+```
+
+```{r}
+#Using GGplot2 to make number of zombies killed by survivors by gender 
+Zombies_killed_By_Gender <- ggplot(zombies, aes(x = gender, y = zombies_killed)) 
+Zombies_killed_By_Gender <- Zombies_killed_By_Gender + geom_boxplot()
+Zombies_killed_By_Gender <- Zombies_killed_By_Gender + theme(axis.text.x = element_text(angle = 90))
+Zombies_killed_By_Gender <- Zombies_killed_By_Gender + ylab("zombies_killed")
+Zombies_killed_By_Gender
+```
+
+```{r}
+#Using GGplot2 to make years of education of survivors by gender 
+Yrs_Edu_By_Gender <- ggplot(zombies, aes(x = gender, y = years_of_education)) 
+Yrs_Edu_By_Gender <- Yrs_Edu_By_Gender + geom_boxplot()
+Yrs_Edu_By_Gender <- Yrs_Edu_By_Gender + theme(axis.text.x = element_text(angle = 90))
+Yrs_Edu_By_Gender <- Yrs_Edu_By_Gender + ylab("years_of_education")
+Yrs_Edu_By_Gender
+```
+
+```{r}
+#Use ggplot2 to make scatterplot of height/weight in relation to age.
+#Height to age
+Height_To_Age <- ggplot(data = d, aes(x = log(height), y = log(age)))
+Height_To_Age <- Height_To_Age + geom_point()
+Height_To_Age <- Height_To_Age + geom_smooth(method = "lm")
+Height_To_Age
+#Weight to age
+Weight_To_Age <- ggplot(data = d, aes(x = log(weight), y = log(age)))
+Weight_To_Age <- Weight_To_Age + geom_point()
+Weight_To_Age <- Weight_To_Age + geom_smooth(method = "lm")
+Weight_To_Age
+#I guess from looking at these two variables it seems that there seems to be a generally positive correlation between both height and age and weight and age, but there seems to be more anomalies and outlying data points concerning the weight and age. 
+```
+
+```{r}
+par(mfrow = c(1,5))  # gives us 5 panels
+attach(d)
+hist(log(height), freq = FALSE, col = "red", main = "Histogram_Height", xlab = "log(height)",
+    ylab = "density", ylim = c(0, 0.2))
+hist(log(weight), freq = FALSE, col = "green", main = "Histogram_Weight", xlab = "log(weight)",
+    ylab = "density", ylim = c(0, 0.2))
+hist(log(age), freq = FALSE, col = "blue", main = "Histogram_Age", xlab = "log(age)",
+    ylab = "density", ylim = c(0, 0.2))
+hist(log(zombies_killed), freq = FALSE, col = "purple", main = "Histogram_Zombies_killed", xlab = "log(zombies_killed)",
+    ylab = "density", ylim = c(0, 0.2))
+hist(log(years_of_education), freq = FALSE, col = "orange", main = "Histogram_years_of_education", xlab = "log(years_of_education)",
+    ylab = "density", ylim = c(0, 0.2))
+#Remember density is calculated so the total area under the histogram = 1
+#Q-Q plot: make 5
+qqnorm(height, main = "Normal QQ Plot Height")
+qqline(height, col = "gray")
+
+qqnorm(weight, main = "Normal QQ Plot Weight")
+qqline(weight, col = "gray")
+
+qqnorm(age, main = "Normal QQ Plot Age")
+qqline(height, col = "gray")
+
+qqnorm(zombies_killed, main = "Normal QQ Plot Zombies Killed")
+qqline(height, col = "gray")
+
+qqnorm(years_of_education, main = "Normal QQ Plot Years of Education")
+qqline(height, col = "gray")
+#Height, weight distributed normally. Age seems to be left skewed, zombies killed appears right skewed following Poisson, education years is left skewed.
+```
+
+```{r}
+#5- sample function
+set.seed(1)
+height<-sample(1:1000, 30, replace=FALSE)
+height
+stdev <- height
+sem_height <- stdev/sqrt (30)
+sigma <- sqrt(sum((height - mean(height))^2)/length(height))
+pop_se_height <- sqrt(sigma^2/30)
+pop_se_height
+
+weight<-sample(1:1000, 30, replace=FALSE)
+weight
+stdev <- weight
+sem_weight <- stdev/sqrt (30)
+sigma <- sqrt(sum((weight - mean(weight))^2)/length(weight))
+pop_se_weight <- sqrt(sigma^2/30)
+pop_se_weight
+
+age <-sample(1:1000, 30, replace=FALSE)
+age
+stdev <- age
+sem_age <- stdev/sqrt (30)
+sigma <- sqrt(sum((age - mean(age))^2)/length(age))
+pop_se_age <- sqrt(sigma^2/30)
+pop_se_age
+
+zombies_killed <-sample(1:1000, 30, replace=FALSE)
+zombies_killed
+stdev <- zombies_killed
+sem_zombies_killed <- stdev/sqrt (30)
+sigma <- sqrt(sum((zombies_killed - mean(zombies_killed))^2)/length(zombies_killed))
+pop_se_zombies_killed <- sqrt(sigma^2/30)
+pop_se_zombies_killed
+
+years_of_education <-sample(1:1000, 30, replace=FALSE)
+years_of_education
+stdev <- years_of_education
+years_of_education <- stdev/sqrt (30)
+sigma <- sqrt(sum((years_of_education - mean(years_of_education))^2)/length(years_of_education))
+pop_se_years_of_education <- sqrt(sigma^2/30)
+pop_se_years_of_education
+
+#I'm really unsure of my code here. If there's a simpler way to do this I'd love some suggestions, and I've also got to bootstrap my data. Since I'm really behind i'm going to move on for the purpose of the draft. 
+```
+
+```{r}
+#6- 100 more samples
+set.seed(1)
+height<-sample(1:100, 30, replace=TRUE)
+height
+stdev <- height
+sem_height <- stdev/sqrt (30)
+sigma <- sqrt(sum((height - mean(height))^2)/length(height))
+pop_se_height <- sqrt(sigma^2/30)
+pop_se_height
+
+weight<-sample(1:100, 30, replace=TRUE)
+weight
+stdev <- weight
+sem_weight <- stdev/sqrt (30)
+sigma <- sqrt(sum((weight - mean(weight))^2)/length(weight))
+pop_se_weight <- sqrt(sigma^2/30)
+pop_se_weight
+
+age <-sample(1:100, 30, replace=TRUE)
+age
+stdev <- age
+sem_age <- stdev/sqrt (30)
+sigma <- sqrt(sum((age - mean(age))^2)/length(age))
+pop_se_age <- sqrt(sigma^2/30)
+pop_se_age
+
+zombies_killed <-sample(1:100, 30, replace=TRUE)
+zombies_killed
+stdev <- zombies_killed
+sem_zombies_killed <- stdev/sqrt (30)
+sigma <- sqrt(sum((zombies_killed - mean(zombies_killed))^2)/length(zombies_killed))
+pop_se_zombies_killed <- sqrt(sigma^2/30)
+pop_se_zombies_killed
+
+years_of_education <-sample(1:100, 30, replace=TRUE)
+years_of_education
+stdev <- years_of_education
+years_of_education <- stdev/sqrt (30)
+sigma <- sqrt(sum((years_of_education - mean(years_of_education))^2)/length(years_of_education))
+pop_se_years_of_education <- sqrt(sigma^2/30)
+pop_se_years_of_education
+#I'm quite confused on this question here. I'm wondering if for this sample we draw with replacement. I'm also confused on what graph would be appropriate (histogram?)
+```
+
