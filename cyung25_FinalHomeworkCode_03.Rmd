@@ -1,0 +1,278 @@
+---
+title: "cyung25_FinalHomeworkCode_03"
+author: "Charles Yung"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r}
+#Load Zombies.csv dataset into R. I did this through following the module on uploading a local file at first. For the final homework I was able to load the dataset from github
+library(curl)
+f <- curl("https://raw.githubusercontent.com/fuzzyatelin/fuzzyatelin.github.io/master/AN588_Fall23/zombies.csv")
+zombies <- read.csv(f, header = TRUE, sep = ",", stringsAsFactors = FALSE)
+head(zombies)
+```
+
+```{r}
+#1 Calculate population means/SDs of height, weight, age, zombies killed, years of education. 
+mean_height <- mean(zombies$height)
+print (mean_height)
+mean_weight <- mean(zombies$weight)
+print (mean_weight)
+mean_age <- mean(zombies$age)
+print (mean_age)
+mean_zkilled <- mean(zombies$zombies_killed)
+print(mean_zkilled)
+mean_yredu <- mean(zombies$years_of_education)
+print(mean_yredu)
+#So we have the calculated means of each column. Now for standard deviation for each column. First define population standard deviation function. 
+pop_sd <- function(x) {sqrt(pop_v(x))}
+pop_sd
+pop_v <- function(x) {sum((x - mean(x))^2)/(length(x))}
+pop_v
+#Don't forget to define the variance
+pop_sd_height <- pop_sd(zombies$height)
+print(pop_sd_height)
+pop_sd_weight <- pop_sd(zombies$weight)
+print(pop_sd_weight)
+pop_sd_age <- pop_sd(zombies$age)
+print(pop_sd_age)
+pop_sd_zkilled <- pop_sd(zombies$zombies_killed)
+print(pop_sd_zkilled)
+pop_sd_yredu <- pop_sd(zombies$years_of_education)
+print(pop_sd_yredu)
+## s <- z %>%
+## select (height, weight, age, zombies_killed, years of eductaion)
+##cbind command
+```
+```{r}
+#2: boxplots Using GGplot2 to make height by gender 
+# Uaw P <- gg plot (data = z, aes (x = gender, y = height))
+library(ggplot2)
+zombies <- read.csv("~/Desktop/zombies.csv", header = TRUE)
+Height_By_Gender <- ggplot(zombies, aes(x = gender, y = height)) 
+Height_By_Gender <- Height_By_Gender + geom_boxplot()
+Height_By_Gender <- Height_By_Gender + theme(axis.text.x = element_text(angle = 90))
+Height_By_Gender <- Height_By_Gender + ylab("height")
+Height_By_Gender
+```
+
+```{r}
+#Using GGplot2 to make weight by gender 
+zombies <- read.csv("~/Desktop/zombies.csv", header = TRUE)
+Weight_By_Gender <- ggplot(zombies, aes(x = gender, y = weight)) 
+Weight_By_Gender <- Weight_By_Gender + geom_boxplot()
+Weight_By_Gender <- Weight_By_Gender + theme(axis.text.x = element_text(angle = 90))
+Weight_By_Gender <- Weight_By_Gender + ylab("weight")
+Weight_By_Gender
+```
+
+```{r}
+#Using GGplot2 to make age by gender 
+zombies <- read.csv("~/Desktop/zombies.csv", header = TRUE)
+Age_By_Gender <- ggplot(zombies, aes(x = gender, y = age)) 
+Age_By_Gender <- Age_By_Gender + geom_boxplot()
+Age_By_Gender <- Age_By_Gender + theme(axis.text.x = element_text(angle = 90))
+Age_By_Gender <- Age_By_Gender + ylab("age")
+Age_By_Gender
+```
+
+```{r}
+#Using GGplot2 to make number of zombies killed by survivors by gender 
+zombies <- read.csv("~/Desktop/zombies.csv", header = TRUE)
+Zombies_killed_By_Gender <- ggplot(zombies, aes(x = gender, y = zombies_killed)) 
+Zombies_killed_By_Gender <- Zombies_killed_By_Gender + geom_boxplot()
+Zombies_killed_By_Gender <- Zombies_killed_By_Gender + theme(axis.text.x = element_text(angle = 90))
+Zombies_killed_By_Gender <- Zombies_killed_By_Gender + ylab("zombies_killed")
+Zombies_killed_By_Gender
+```
+
+```{r}
+#Using GGplot2 to make years of education of survivors by gender 
+zombies <- read.csv("~/Desktop/zombies.csv", header = TRUE)
+Yrs_Edu_By_Gender <- ggplot(zombies, aes(x = gender, y = years_of_education)) 
+Yrs_Edu_By_Gender <- Yrs_Edu_By_Gender + geom_boxplot()
+Yrs_Edu_By_Gender <- Yrs_Edu_By_Gender + theme(axis.text.x = element_text(angle = 90))
+Yrs_Edu_By_Gender <- Yrs_Edu_By_Gender + ylab("years_of_education")
+Yrs_Edu_By_Gender
+```
+
+```{r}
+#3 Use ggplot2 to make scatterplot of height/weight in relation to age.
+#Height to age
+zombies <- read.csv("~/Desktop/zombies.csv", header = TRUE)
+Height_To_Age <- ggplot(zombies, aes(x = height, y = age))
+Height_To_Age <- Height_To_Age + geom_point()
+Height_To_Age <- Height_To_Age + geom_smooth(method = "lm")
+Height_To_Age
+#Weight to age
+Weight_To_Age <- ggplot(zombies, aes(x = weight, y = age))
+Weight_To_Age <- Weight_To_Age + geom_point()
+Weight_To_Age <- Weight_To_Age + geom_smooth(method = "lm")
+Weight_To_Age
+#I guess from looking at these two variables it seems that there seems to be a generally positive correlation between both height and age and weight and age, but there seems to be more anomalies and outlying data points concerning the weight and age. 
+```
+
+```{r}
+#4 histogram and qq plot- take off the log functions (not log of height, just height)
+#use hist rpois after the ylim and xlim for (1000,3)
+zombies <- read.csv("~/Desktop/zombies.csv", header = TRUE)
+par(mfrow = c(2,3))  # gives us 5 panels
+attach(zombies)
+hist(zombies$height, freq = FALSE, col = "red", main = "Histogram_Height", xlab = "height",
+    ylab = "density", ylim = c(0, 0.3))
+hist(zombies$weight, freq = FALSE, col = "green", main = "Histogram_Weight", xlab = "weight",
+    ylab = "density", ylim = c(0, 0.3))
+hist(zombies$age, freq = FALSE, col = "blue", main = "Histogram_Age", xlab = "age",
+    ylab = "density", ylim = c(0, 0.3))
+hist(zombies$zombies_killed, freq = FALSE, col = "purple", main = "Histogram_Zombies_killed", xlab = "zombies_killed",
+    ylab = "density", ylim = c(0, 0.3))
+hist(zombies$years_of_education, freq = FALSE, col = "orange", main = "Histogram_years_of_education", xlab = "years_of_education",
+    ylab = "density", ylim = c(0, 0.3))
+#Remember density is calculated so the total area under the histogram = 1
+#Q-Q plot: make 5
+qqnorm(zombies$height, main = "Normal QQ Plot Height")
+qqline(zombies$height, col = "cyan")
+
+qqnorm(zombies$weight, main = "Normal QQ Plot Weight")
+qqline(zombies$weight, col = "cyan")
+
+qqnorm(zombies$age, main = "Normal QQ Plot Age")
+qqline(zombies$age, col = "cyan")
+
+qqnorm(zombies$zombies_killed, main = "Normal QQ Plot Zombies Killed")
+qqline(zombies$zombies_killed, col = "cyan")
+
+qqnorm(zombies$years_of_education, main = "Normal QQ Plot Years of Education")
+qqline(zombies$years_of_education, col = "cyan")
+## Height, age, and weight look like they follow a normal distribution. However, Zombies_killed and Years_of_education are right skewed since their top values are above the diagonal.
+```
+
+```{r}
+## 4 contd: See what distribution zombies killed and years of education fit. Try for Poisson
+par(mfrow = c(1, 2))
+hist(zombies$zombies_killed, freq = FALSE, main = "zombies_killed", xlab = "zombies_killed", ylab = "density", ylim = c(0, 0.3), xlim = c(0, 11))
+hist(rpois(1000, 3), probability = T)
+hist(zombies$years_of_education, freq = FALSE, main = "years_of_education", xlab = "years_of_education", ylab = "density", ylim = c(0, 0.3), xlim = c(0, 11))
+hist(rpois(1000, 3), probability = T)
+## Neither of these fit the poisson distribution. the Y values for zombies_killed are not matching and the x values of years of education do not match either. 
+probset2 <- dbinom(x = 0:11, size = 1000, prob = 1/550)
+barplot(probset2, names.arg = 0:11, space = 0, xlab = "zombies_killed", ylab = "Pr(X=outcome)", ylim = c(0, 0.3), xlim = c(0, 11))
+probset <- dbinom(x = 0:11, size = 1000, prob = 1/550)
+barplot(probset, names.arg = 0:11, space = 0, xlab = "years_of_education", ylab = "Pr(X=outcome)", ylim = c(0, 0.3), xlim = c(0, 11))
+## Here the the Bernoulli projections match so that means that these two variables came from the Bernoulli distribution. 
+```
+```{r}
+#5- sample function. This time made sure to put the sample functions inside the parentheses when I put commands. 
+## sample height
+set.seed(1)
+sample_height<-sample(zombies$height, size = 30, replace=FALSE)
+mean(sample_height)
+sd(sample_height)
+standard_error_height <- {sd(sample_height) / sqrt(length(sample_height))
+}
+upper_zombie_height <- mean(sample_height) + qnorm(0.95, mean = 0, sd = 1) * (standard_error_height)
+lower_zombie_height <- mean(sample_height) + qnorm(0.05, mean = 0, sd = 1) * (standard_error_height)
+ci_height <- c(lower_zombie_height, upper_zombie_height)
+ci_height
+```
+
+```{r}
+## sample weight
+sample_weight<-sample(zombies$weight, size = 30, replace=FALSE)
+mean(sample_weight)
+sd(sample_weight)
+standard_error_weight <- {sd(sample_weight) / sqrt(length(sample_weight))
+}
+upper_zombie_weight <- mean(sample_weight) + qnorm(0.95, mean = 0, sd = 1) * (standard_error_weight)
+lower_zombie_weight <- mean(sample_weight) + qnorm(0.05, mean = 0, sd = 1) * (standard_error_weight)
+ci_weight <- c(lower_zombie_weight, upper_zombie_weight)
+ci_weight
+```
+
+```{r}
+## sample age
+sample_age<-sample(zombies$age, size = 30, replace=FALSE)
+mean(sample_age)
+sd(sample_age)
+standard_error_age <- {sd(sample_age) / sqrt(length(sample_age))
+}
+upper_zombie_age <- mean(sample_age) + qnorm(0.95, mean = 0, sd = 1) * (standard_error_age)
+lower_zombie_age <- mean(sample_age) + qnorm(0.05, mean = 0, sd = 1) * (standard_error_age)
+ci_age <- c(lower_zombie_age, upper_zombie_age)
+ci_age
+```
+
+```{r}
+## bootstrap zombies killed and years of education because they aren't normal
+## zombies killed
+s_zombies_killed <- sample(zombies$zombies_killed, size = 30, replace = FALSE)
+mean(s_zombies_killed)
+sd(s_zombies_killed)
+set <- NULL  # sets up a dummy variable to hold our simulations
+n <- 15
+for (i in 1:10000) {set[i] <- mean(sample(s_zombies_killed, n, replace = TRUE))}
+quantile(set, c(0.025, 0.975))
+```
+
+```{r}
+## years of education
+s_years_of_education <- sample(zombies$years_of_education, size = 30, replace = FALSE)
+mean(s_years_of_education)
+sd(s_years_of_education)
+set <- NULL 
+n <- 15
+for (i in 1:10000) {set[i] <- mean(sample(s_years_of_education, n, replace = TRUE))}
+quantile(set, c(0.025, 0.975))
+```
+
+
+```{r}
+## question 6: sample 100 times
+random_means_height <- NULL
+for (i in 1:100) {random_means_height[i] <- mean(sample(zombies$height, 30))}
+hist(random_means_height, probability = TRUE)
+mean(random_means_height)
+sd(random_means_height)
+```
+
+```{r}
+random_means_weight <- NULL
+for (i in 1:100) {random_means_weight[i] <- mean(sample(zombies$weight, 30))}
+hist(random_means_weight, probability = TRUE)
+mean(random_means_weight)
+sd(random_means_weight)
+```
+
+```{r}
+random_means_age <- NULL
+for (i in 1:100) {random_means_age[i] <- mean(sample(zombies$age, 30))}
+hist(random_means_age, probability = TRUE)
+mean(random_means_age)
+sd(random_means_age)
+```
+
+```{r}
+random_means_zkilled <- NULL
+for (i in 1:100) {random_means_zkilled[i] <- mean(sample(zombies$zombies_killed, 30))}
+hist(random_means_zkilled, probability = TRUE)
+mean(random_means_zkilled)
+sd(random_means_zkilled)
+```
+
+```{r}
+random_means_yredu <- NULL
+for (i in 1:100) {random_means_yredu[i] <- mean(sample(zombies$years_of_education, 30))}
+hist(random_means_yredu, probability = TRUE)
+mean(random_means_yredu)
+sd(random_means_yredu)
+## all the histograms look pretty much similar. the median x values are corresponding to the highest y values in each graph. As for the standard deviations, in question 6 they are a lot closer than in question 5. 
+
+## 5 challenges I faced in doing the homework:
+## 1: Loading the dataset into github. At first for some reason I kept getting error messages when I tried to load the dataset from github so for my initial draft, which was really discouraging. Therefore I had to use commands to load the file from my desktop. I think my mistake was trying to use a "tidyverse" command where I shouldn't have. 
+## 2: Being more efficient at naming my variables. I think here I wanted to keep track of what I was doing as best as I could so I was pretty explicit in naming every little thing. While this was helpful this did end up taking more time than it should have I'm going to find an easier way to name my variables this time. 
+## 3: Keeping my code organized and condensed: Separating each task I wanted to accomplish by making discrete chunks for it and writing notes in what I wanted to accomplished helped, but I realized that a little bit too late. Eventually, I did figure the best way to write my code to organize my functions by the tasks I wanted to accomplish and the variables I wanted use versus trying to put them together. 
+## 4: Figuring out bootstrapping: It took so long for me to find the proper bootstrapping codes for zombies_killed and years of education. I was literally scouring through each module multiple times, but I'm glad i finally found it. 
+## 5: For question 6 when they said draw 99 more samples there was a period where I needed to write 1:99 in the function and I was honestly just losing my mind as to why it wasn't working. But now I know to account for a total of 100 samples. 
+```
+
